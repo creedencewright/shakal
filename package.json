@@ -1,6 +1,6 @@
 {
   "name": "shakal",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "client side task runner based on gulp",
   "preferGlobal": true,
   "dependencies": {

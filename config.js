@@ -32,19 +32,23 @@ var config = {
     _write: function() {
         fs.writeFileSync(CONFIG_PATH, JSON.stringify(data));
     },
-    addProject: function(project, saveCb) {
+    addProject: function(project, cb) {
         _resolveDependencies(project, function() {
-            saveCb();
-            return;
             data.projects.push(project);
             config._write();
+
+            cb();
         });
     },
-    updateProject: function(project) {
-        var projectToUpdate = config.getProject(project.name);
-        var i               = data.projects.indexOf(projectToUpdate);
-        data.projects[i]    = project;
-        config._write();
+    updateProject: function(project, cb) {
+        _resolveDependencies(project, function() {
+            var projectToUpdate = config.getProject(project.name);
+            var i               = data.projects.indexOf(projectToUpdate);
+            data.projects[i]    = project;
+            config._write();
+
+            cb();
+        });
     },
     setName: function(name) {
         data.userName = name;
@@ -121,16 +125,17 @@ var _resolveDependencies = function(project, cb) {
 
     if (dependencies.length) {
         console.log(chalk.green('Go grab a coffee') + ', ' + chalk.cyan(config.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
-        var shakalDir = path.dirname(process.argv[1]);
+
+        var moduleDir = path.dirname(process.argv[1]);
         var exec = require('child_process').exec;
-        var install = exec('npm i ' + dependencies.join(' '), {cwd: shakalDir});
+        var install = exec('npm i ' + dependencies.join(' '), {cwd: moduleDir});
         install.stdout.on('data', function(data) {
             console.log(data);
         })
         install.stderr.on('data', function (data) {
             console.log(data);
         });
-        install.stderr.on('close', function (data) {
+        install.stderr.on('close', function () {
             cb();
         });
     } else {

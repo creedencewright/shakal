@@ -4,6 +4,11 @@ var message = require("./message");
 function list(projects, onlyActive) {
     var projects = projects.filter(function(p) {return onlyActive ? p.active : p});
 
+    if (!projects.length) {
+        console.log('Nothing here yet.');
+        process.exit();
+    }
+
     var headText = onlyActive ? 'These are your '+ chalk.green('active') +' projects, son:' : 'These are your projects, son:';
     message('\n' + headText);
     projects.forEach(function(p) {
