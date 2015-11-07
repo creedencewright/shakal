@@ -134,7 +134,7 @@ function setup(projectName, projectPath, isConfig) {
         }
 
         if (isConfig) {
-            config.updateProject(settings);
+            config.updateProject(settings, saveCb);
         } else {
             config.addProject(settings, saveCb);
         }

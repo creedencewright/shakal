@@ -2,7 +2,8 @@ var chalk = require('chalk');
 var path  = require('path');
 
 function setQuestions(projectName, folderName, config, isConfig) {
-    var project;
+    var project,
+        projectPath = process.cwd();
 
     if (isConfig) {
         project = config.getProject(projectName);
@@ -11,6 +12,8 @@ function setQuestions(projectName, folderName, config, isConfig) {
             console.log(chalk.cyan(config.getName()) + ', I didn\'t find a project with this name - ' + chalk.bgRed.white(projectName));
             return [];
         }
+
+        projectPath = project.path;
     }
 
     var questions = [];
@@ -74,7 +77,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
                 ' path to the images folder then. \n  ' +
                 'You can write several paths separated with a semicolon like so: \n  ' +
                 chalk.green('path/to/some/folder/') + ';' + chalk.blue('another/one/here/') + '\n \n ' +
-                chalk.grey(path.normalize(process.cwd() + '/')) + '>'
+                chalk.grey(path.normalize(projectPath + '/')) + '>'
         }
     };
 
@@ -107,7 +110,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
         ' path to the style-file then. \n  ' +
         'You can write several paths separated with a semicolon like so: \n  ' +
         chalk.green('path/to/some/file.less') + ';' + chalk.blue('another/one/here.less') + '\n  ' +
-        chalk.grey(path.normalize(process.cwd() + '/')) + '>'
+        chalk.grey(path.normalize(projectPath + '/')) + '>'
     };
 
     var styleCssPathQ = {
@@ -117,7 +120,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
         name: 'styleCssPath',
         default: 'same folder',
         message: 'Alright, we have a generated ' + chalk.magenta('CSS-file') +
-        ' (or even several files) here. Where do I put it?\n  ' + chalk.grey(process.cwd()) + '>'
+        ' (or even several files) here. Where do I put it?\n  ' + chalk.grey(projectPath) + '>'
     };
 
     var prefQ = {
@@ -154,7 +157,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
     var spriteImagesQ = {
         name: 'spriteImagesPath',
         message: 'Well... Where is the sprite images/parts folder? \n ' +
-        chalk.grey(path.normalize(process.cwd() + '/')) + '>',
+        chalk.grey(path.normalize(projectPath + '/')) + '>',
         when: function(ans) {
             return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
         }
@@ -162,7 +165,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
 
     var spritePathQ = {
         name: 'spritePath',
-        message: 'And where do I put a sprite? \n ' + chalk.grey(process.cwd()) + '>',
+        message: 'And where do I put a sprite? \n ' + chalk.grey(projectPath) + '>',
         when: function(ans) {
             return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
         }
@@ -171,7 +174,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
     var spriteCssQ = {
         name: 'spriteCssPath',
         message: 'Got it! Almost forgot, I need to know where do I put generated sprite-styles file...\n' +
-        chalk.grey(process.cwd()) + '>',
+        chalk.grey(projectPath) + '>',
         when: function(ans) {
             return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
         }
