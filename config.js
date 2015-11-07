@@ -120,7 +120,7 @@ var _resolveDependencies = function(project, cb) {
     }
 
     if (dependencies.length) {
-        console.log(chalk.green('Go grab a coffee') + ', ' + chalk.cyan(this.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
+        console.log(chalk.green('Go grab a coffee') + ', ' + chalk.cyan(config.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
         var shakalDir = path.dirname(process.argv[1]);
         var exec = require('child_process').exec;
         var install = exec('npm i ' + dependencies.join(' '), {cwd: shakalDir});
