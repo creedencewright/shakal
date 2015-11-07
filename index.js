@@ -26,6 +26,13 @@ program
     });
 
 program
+    .command('config <projectName>')
+    .action(function(projectName) {
+        command = true;
+        add(projectName, true);
+    });
+
+program
     .command('activate <projectName...>')
     .action(function(projectName) {
         command = true;

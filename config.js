@@ -1,8 +1,10 @@
 var fs   = require('fs');
 var path = require('path');
 
-var DIRECTORY = path.dirname(process.argv[1]);
+var DIRECTORY   = path.dirname(process.argv[1]);
 var CONFIG_PATH = DIRECTORY + '/config.json';
+
+var names = ['Cowboy', 'Young padawan', 'Web Developer', 'Friend', 'Developer'];
 
 var data = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
 
@@ -19,6 +21,9 @@ var config = {
     isNameOccupied: function(name) {
         return data.projects.filter(function(p) { return p.name === name; }).length;
     },
+    getRandomName: function() {
+        return names[Math.floor(Math.random() * names.length)];
+    },
     removeProjects: function(projects) {
         data.projects = data.projects.filter(function(p) { return projects.indexOf(p.name) === -1 });
         config._write();
@@ -30,12 +35,21 @@ var config = {
         data.projects.push(project);
         config._write();
     },
+    updateProject: function(project) {
+        var projectToUpdate = config.getProject(project.name);
+        var i               = data.projects.indexOf(projectToUpdate);
+        data.projects[i]    = project;
+        config._write();
+    },
     setName: function(name) {
         data.userName = name;
         config._write();
     },
     getName: function() {
         return data.userName;
+    },
+    getProject: function(name) {
+        return data.projects.filter(function(p) {return p.name === name})[0];
     },
     getProjects: function(onlyActive) {
         if (onlyActive) {

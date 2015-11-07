@@ -4,204 +4,93 @@ var message = require('./message');
 var config  = require('./config');
 var chalk   = require('chalk');
 var path    = require('path');
+var fs      = require('fs');
 
-function _isNameOccupied(name) {
-    return config.isNameOccupied(name);
-}
+//function getFiles(str) {
+//    if (str.split('/').length > 1) {
+//        var data = fs.readdirSync('./'+str);
+//    } else {
+//        var data = fs.readdirSync('./');
+//    }
+//    var files = [];
+//
+//    data.forEach(function(el) {
+//        var re = '^'+str+'.*';
+//        var regex = new RegExp(re);
+//        var found = el.match(regex);
+//
+//        if (found !== null) {
+//            files.push(el);
+//        }
+//    });
+//
+//    if (files.length === 1) {
+//        var res = files[0].replace(str, '')
+//        if (fs.lstatSync('./' + str + res).isDirectory()) {
+//            return res + '/';
+//        }
+//        return res;
+//    }
+//    return false;
+//}
 
-function setup(projectName, projectPath) {
+inquirer.prompt.prompts.input.prototype.onKeypress = function(e) {
+    if (e.key.name === 'tab') {
+        this.rl.line = this.rl.line.trim();
+        //var file = getFiles(this.rl.line);
+        //if (file) {
+        //    this.rl.line += file;
+        //}
+    }
+    this.render();
+};
+
+function setup(projectName, projectPath, isConfig) {
     var folderName = path.basename(projectPath);
     var settings   = {};
 
-    if (projectName) {
-        message('Setting up ' + projectName.toUpperCase() + '...\n', 'green');
-    } else {
-        message('Woah, I need to know the name of the project here...\n', 'black', 'bgYellow');
+    if (isConfig) {
+        var project = config.getProject(projectName);
     }
 
     if (projectName) {
-        if (_isNameOccupied(projectName)) {
+        message('Setting up ' + projectName.toUpperCase() + '...\n', 'green');
+    }
+
+    if (projectName) {
+        if (config.isNameOccupied(projectName) && !isConfig) {
             console.log(chalk.bgYellow.black('Oops :( \n') + 'Looks like you already have a project with a name <' +
             chalk.bgRed.white(projectName) + '>\n');
         }
     }
 
-    var questions = [
-        {
-            name: 'userName',
-            message: chalk.green.bold('Hello!') + ' Looks like we\'ve never met before. What is your name, ' +
-            chalk.yellow('cowboy') + '?',
-            when: function() {
-                return !config.getName()
-            }
-        },
-        {
-            when: function() {
-                return !projectName || _isNameOccupied(projectName);
-            },
-            name: 'projectNameConfirm',
-            default: projectName && !_isNameOccupied(projectName) ? projectName : folderName,
-            message: function(ans) {
-                var name = config.getName();
+    var questions = require('./questions')(projectName, folderName, config, isConfig);
 
-                if (!name) {
-                    name = ans.userName;
-                    message('\n  Well, nice to meet you, ' + chalk.cyan(name) + '!\n');
-                }
+    if (!questions.length) process.exit();
 
-                return chalk.cyan(name) + ', what is the name of the project?';
-            }
-        },
-        {
-            when: function(ans) {
-                return ans.projectNameConfirm || projectName;
-            },
-            type: 'confirm',
-            name: 'imagesConfirm',
-            message: function(ans) {
-                var name = config.getName();
-
-                if (!ans.projectNameConfirm && !name) {
-                    name = ans.userName;
-                    message('\n  Well, nice to meet you, ' + chalk.cyan(name) + '!\n');
-                }
-
-                var text = !projectName ? 'Do you wish your images to be optimized?' : chalk.cyan(name) +
-                ', do you wish your images to be optimized?';
-
-                return text;
-            },
-            default: true
-        },
-        {
-            when: function(ans) {
-                return ans.imagesConfirm && (ans.projectNameConfirm || projectName);
-            },
-            name: 'imagesPath',
-            message: chalk.green('Great') + '! I\'m going to need a ' + chalk.yellow('RELATIVE') +
-            ' path to the images folder then. \n  ' +
-            'You can write several paths separated with a semicolon like so: \n  ' +
-            chalk.green('path/to/some/folder/') + ';' + chalk.blue('another/one/here/') + '\n  ' +
-            chalk.grey(path.normalize(process.cwd() + '/')) + '>'
-        },
-        {
-            when: function(ans) {
-                return ans.projectNameConfirm || projectName;
-            },
-            type: 'list',
-            choices: [
-                {
-                    name: 'I\'ll be fine with good old CSS',
-                    value: false
-                },
-                {
-                    name: 'LESS',
-                    value: 'less'
-                },
-                //{
-                //    name: 'Sass',
-                //    value: 'sass'
-                //},
-                //{
-                //    name: 'Stylus',
-                //    value: 'stylus'
-                //}
-            ],
-            message: 'Do you want to use a style pre-processor?',
-            default: true,
-            name: 'styleProcessor'
-        },
-        {
-            when: function(ans) {
-                return ans.styleProcessor && (ans.projectNameConfirm || projectName);
-            },
-            name: 'stylePath',
-            message: chalk.green('Great') + '! I\'m going to need a ' + chalk.magenta('RELATIVE') +
-            ' path to the style-file then. \n  ' +
-            'You can write several paths separated with a semicolon like so: \n  ' +
-            chalk.green('path/to/some/file.less') + ';' + chalk.blue('another/one/here.less') + '\n  ' +
-            chalk.grey(path.normalize(process.cwd() + '/')) + '>'
-        },
-        {
-            when: function(ans) {
-                return ans.styleProcessor && (ans.projectNameConfirm || projectName);
-            },
-            name: 'styleCssPath',
-            default: 'same folder',
-            message: 'Alright, we have a generated ' + chalk.magenta('CSS-file') +
-            ' (or even several files) here. Where do I put it?\n  ' + chalk.grey(process.cwd()) + '>'
-        },
-        {
-            when: function(ans) {
-                return ans.styleProcessor && (ans.projectNameConfirm || projectName);
-            },
-            type: 'confirm',
-            name: 'styleAutoprefixConfirm',
-            message: 'Do you want to use Autoprefixer?'
-        },
-        {
-            when: function(ans) {
-                return ans.styleAutoprefixConfirm && (ans.projectNameConfirm || projectName);
-            },
-            name: 'styleAutoprefixParam',
-            default: 'last 3 versions',
-            message: 'Autoprefixer param is '
-        },
-        {
-            when: function(ans) {
-                return ans.projectNameConfirm || projectName;
-            },
-            name: 'spriteConfirm',
-            message: function(ans) {
-                var name = config.getName() ? config.getName() : ans.userName;
-                return chalk.cyan(name) + ', do you want me to build ' + chalk.green('sprites') + ' for you?'
-            },
-            type: 'confirm',
-            default: true
-        },
-        {
-            name: 'spriteImagesPath',
-            message: 'Well... Where is the sprite images/parts folder? \n ' +
-            chalk.grey(path.normalize(process.cwd() + '/')) + '>',
-            when: function(ans) {
-                return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
-            }
-        },
-        {
-            name: 'spritePath',
-            message: 'And where do I put a sprite? \n ' + chalk.grey(process.cwd()) + '>',
-            when: function(ans) {
-                return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
-            }
-        },
-        {
-            name: 'spriteCssPath',
-            message: 'Got it! Almost forgot, I need to know where do I put generated sprite-styles file...\n' +
-            chalk.grey(process.cwd()) + '>',
-            when: function(ans) {
-                return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
-            }
-        }
-
-    ];
     inquirer.prompt(questions, function(ans) {
-        settings.name = ans.projectNameConfirm;
+        settings.name = ans.projectNameConfirm ? ans.projectNameConfirm : projectName;
         settings.path = path.normalize(projectPath + '/');
 
-        var userName = config.getName() ? config.getName() : ans.userName;
+        var userName = config.getName();
 
-        if (!config.getName()) {
-            config.setName(ans.userName);
+        if (!userName) {
+            if (ans.userName) {
+                userName = ans.userName;
+                config.setName(userName);
+            } else {
+                userName = config.getRandomName();
+            }
         }
 
-        if (_isNameOccupied(settings.name)) {
+        if (!isConfig && config.isNameOccupied(settings.name)) {
             message('\n' + userName + ', you already have a project with this name - <' + settings.name +
             '>', 'white', 'bgRed');
             process.exit();
         }
 
         message('\n-__-\n', 'green');
-        message('\n  So, this is what we have here:\n  ');
+        message('So, this is what we have here:\n  ');
 
         settings.active = true;
 
@@ -237,22 +126,28 @@ function setup(projectName, projectPath) {
             console.log('');
         }
 
-        config.addProject(settings);
+        if (isConfig) {
+            config.updateProject(settings);
+        } else {
+            config.addProject(settings);
+        }
 
         message('Looks like this is it, ' + chalk.cyan(userName) + '.');
-        message('You can run the bundler with ' + chalk.green('shakal run') + '.');
-        message('If you made a mistake during the project adding somewhere you can fix that with ' +
+        message('To run the bundler type ' + chalk.green('shakal run') + '.');
+        message('If you made a mistake during the project initialization you can fix that with ' +
         chalk.green('shakal config ' + settings.name) + '.');
-        message('\nMay the force be with you, ' + chalk.yellow('young padawan') + '.');
+        message('\nMay the force be with you, ' + chalk.cyan(userName) + '.');
     });
 }
 
-function add(projectName) {
+function add(projectName, isConfig) {
     var currentPath = process.cwd();
 
-    message('Started new project initialization in ' + chalk.green(currentPath));
+    if (!isConfig) {
+        message('Started new project initialization in ' + chalk.green(currentPath));
+    }
 
-    setup(projectName, currentPath);
+    setup(projectName, currentPath, isConfig);
 }
 
 module.exports = add;
