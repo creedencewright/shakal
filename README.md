@@ -1,5 +1,5 @@
 # shakal
-#### Friendly task manager
+#### Friendly CLI task manager
 #####```npm i -g shakal```
 ---
 
