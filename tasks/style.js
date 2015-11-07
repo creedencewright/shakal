@@ -21,8 +21,8 @@ module.exports = function(project) {
     });
 
     gulp.task(project.name + "_less", function() {
-        console.log('[' + chalk.grey(getTime()) + ']' + ' Running ' +
-        chalk.cyan(project.name + "_style"));
+        var startTime = Date.now();
+        console.log('[' + chalk.grey(getTime()) + '] ' + 'Starting \'' + chalk.cyan(project.name + "_less") + '\'...');
 
         var bundle = gulp.src(files, {base: project.path})
 
@@ -42,7 +42,10 @@ module.exports = function(project) {
         bundle.pipe(minifycss())
             .pipe(gulp.dest(project.path))
             .on('end', function() {
-                console.log('['+chalk.grey(getTime())+'] '+chalk.cyan(project.name + "_less") + ' is finished');
+                var timePassed = Date.now() - startTime;
+                timePassed = timePassed >= 100 ? (timePassed/1000).toFixed(2) + 's' : timePassed + 'ms'
+
+                console.log('[' + chalk.grey(getTime()) + '] Finished \'' + chalk.cyan(project.name + "_less") + '\' after ' + chalk.magenta(timePassed));
             })
             .pipe(reload());
     });

@@ -9,8 +9,10 @@ module.exports = function(project) {
     var gazeParams = {cwd: project.path};
 
     //var start is for tasks that '-watch' will start
-    var start = [project.name + "_less"];
+    var start = [];
     if (project.imagesPath) { start.push(project.name + "_image"); }
+    if (project.styleProcessor) { start.push(project.name + "_less"); }
+    if (project.spriteSourcePath) { start.push(project.name + "_sprite"); }
 
     gulp.task(project.name + "_watch", start, function() {
         if (project.styleProcessor) {
@@ -39,6 +41,21 @@ module.exports = function(project) {
                     console.log('[' + chalk.grey(getTime()) + '] ' +
                     chalk.green(path.basename(filepath) + " was added"));
                     gulp.start(project.name + "_image");
+                });
+            });
+        }
+
+        if (project.spriteSourcePath) {
+            gaze(project.spriteSourcePath + "*.*", gazeParams, function(error) {
+                this.on('added', function(filepath) {
+                    console.log('[' + chalk.grey(getTime()) + '] ' +
+                    chalk.green(path.basename(filepath) + " was added"));
+                    gulp.start(project.name + "_sprite");
+                });
+                this.on('deleted', function(filepath) {
+                    console.log('[' + chalk.grey(getTime()) + '] ' +
+                    chalk.red(path.basename(filepath) + " was removed"));
+                    gulp.start(project.name + "_sprite");
                 });
             });
         }

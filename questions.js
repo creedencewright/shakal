@@ -153,7 +153,6 @@ function setQuestions(projectName, folderName, config, isConfig) {
 
     var spriteImagesQ = {
         name: 'spriteImagesPath',
-        default: isConfig && project.spriteSourcePath ? project.spriteSourcePath : '',
         message: 'Well... Where is the sprite images/parts folder? \n ' +
         chalk.grey(path.normalize(process.cwd() + '/')) + '>',
         when: function(ans) {
@@ -163,7 +162,6 @@ function setQuestions(projectName, folderName, config, isConfig) {
 
     var spritePathQ = {
         name: 'spritePath',
-        default: isConfig && project.spritePath ? project.spritePath : '',
         message: 'And where do I put a sprite? \n ' + chalk.grey(process.cwd()) + '>',
         when: function(ans) {
             return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
@@ -172,7 +170,6 @@ function setQuestions(projectName, folderName, config, isConfig) {
 
     var spriteCssQ = {
         name: 'spriteCssPath',
-        default: isConfig && project.spriteCssPath ? project.spriteCssPath : '',
         message: 'Got it! Almost forgot, I need to know where do I put generated sprite-styles file...\n' +
         chalk.grey(process.cwd()) + '>',
         when: function(ans) {

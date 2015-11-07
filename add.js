@@ -49,10 +49,6 @@ function setup(projectName, projectPath, isConfig) {
     var folderName = path.basename(projectPath);
     var settings   = {};
 
-    if (isConfig) {
-        var project = config.getProject(projectName);
-    }
-
     if (projectName) {
         message('Setting up ' + projectName.toUpperCase() + '...\n', 'green');
     }
@@ -69,8 +65,12 @@ function setup(projectName, projectPath, isConfig) {
     if (!questions.length) process.exit();
 
     inquirer.prompt(questions, function(ans) {
+        if (isConfig) {
+            var project = config.getProject(projectName);
+        }
+
         settings.name = ans.projectNameConfirm ? ans.projectNameConfirm : projectName;
-        settings.path = path.normalize(projectPath + '/');
+        settings.path = isConfig ? project.path : path.normalize(projectPath + '/');
 
         var userName = config.getName();
 

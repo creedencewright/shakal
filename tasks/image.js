@@ -18,13 +18,17 @@ module.exports = function(project) {
     });
 
     gulp.task(project.name + "_image", function() {
-        console.log('['+chalk.grey(getTime())+'] '+'Running ' + chalk.cyan(project.name + "_image"));
+        var startTime = Date.now();
+        console.log('[' + chalk.grey(getTime()) + '] ' + 'Starting \'' + chalk.cyan(project.name + "_image") + '\'...');
 
         gulp.src(folders, {base: project.path})
             .pipe(cache('min'))
             .pipe(imagemin({use: [pngquant()]}))
             .on('end', function() {
-                console.log('[' + chalk.grey(getTime()) + '] ' + chalk.cyan(project.name + "_image") + ' is finished');
+                var timePassed = Date.now() - startTime;
+                timePassed = timePassed >= 100 ? (timePassed/1000).toFixed(2) + 's' : timePassed + 'ms'
+
+                console.log('[' + chalk.grey(getTime()) + '] Finished \'' + chalk.cyan(project.name + "_image") + '\' after ' + chalk.magenta(timePassed));
             })
             .pipe(gulp.dest(project.path));
     });

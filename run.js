@@ -11,6 +11,7 @@ function run() {
         message('\n' + project.name + '\n---', 'green');
 
         if (project.styleProcessor) { require('./tasks/style')(project); }
+        if (project.spriteSourcePath) { require('./tasks/sprite')(project); }
         if (project.imagesPath) { require('./tasks/image')(project); }
 
         require('./tasks/watch')(project);
