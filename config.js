@@ -1,5 +1,6 @@
 var fs   = require('fs');
 var path = require('path');
+var chalk = require('chalk');
 
 var DIRECTORY   = path.dirname(process.argv[1]);
 var CONFIG_PATH = DIRECTORY + '/config.json';
@@ -31,9 +32,13 @@ var config = {
     _write: function() {
         fs.writeFileSync(CONFIG_PATH, JSON.stringify(data));
     },
-    addProject: function(project) {
-        data.projects.push(project);
-        config._write();
+    addProject: function(project, saveCb) {
+        _resolveDependencies(project, function() {
+            saveCb();
+            return;
+            data.projects.push(project);
+            config._write();
+        });
     },
     updateProject: function(project) {
         var projectToUpdate = config.getProject(project.name);
@@ -58,5 +63,80 @@ var config = {
         return data.projects;
     }
 }
+
+var _resolveDependencies = function(project, cb) {
+    console.log('\nChecking dependencies...');
+    var dependencies = [];
+    if (project.styleProcessor) {
+        try {
+            require.resolve('gulp-less');
+        } catch (err) {
+            dependencies.push('gulp-less');
+        }
+        try {
+            require.resolve('gulp-minify-css');
+        } catch (err) {
+            dependencies.push('gulp-minify-css');
+        }
+
+        if (project.styleAutoprefixer) {
+            try {
+                require.resolve('gulp-autoprefixer');
+            } catch (err) {
+                dependencies.push('gulp-autoprefixer');
+            }
+        }
+    }
+
+    if (project.imagesPath) {
+        try {
+            require.resolve('gulp-imagemin');
+        } catch (err) {
+            dependencies.push('gulp-imagemin');
+        }
+        try {
+            require.resolve('imagemin-pngquant');
+        } catch (err) {
+            dependencies.push('imagemin-pngquant');
+        }
+    }
+
+    if (project.spriteSourcePath) {
+        try {
+            require.resolve('gulp-imagemin');
+        } catch (err) {
+            if (dependencies.indexOf('gulp-imagemin') === -1) dependencies.push('gulp-imagemin');
+        }
+        try {
+            require.resolve('gulp.spritesmith');
+        } catch (err) {
+            dependencies.push('gulp.spritesmith');
+        }
+        try {
+            require.resolve('imagemin-pngquant');
+        } catch (err) {
+            if (dependencies.indexOf('imagemin-pngquant') === -1) dependencies.push('imagemin-pngquant');
+        }
+    }
+
+    if (dependencies.length) {
+        console.log(chalk.green('Go grab a coffee') + ', ' + chalk.cyan(this.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
+        var shakalDir = path.dirname(process.argv[1]);
+        var exec = require('child_process').exec;
+        var install = exec('npm i ' + dependencies.join(' '), {cwd: shakalDir});
+        install.stdout.on('data', function(data) {
+            console.log(data);
+        })
+        install.stderr.on('data', function (data) {
+            console.log(data);
+        });
+        install.stderr.on('close', function (data) {
+            cb();
+        });
+    } else {
+        console.log(chalk.green('OK\n'));
+        cb();
+    }
+};
 
 module.exports = config;

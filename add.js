@@ -4,7 +4,6 @@ var message = require('./message');
 var config  = require('./config');
 var chalk   = require('chalk');
 var path    = require('path');
-var fs      = require('fs');
 
 //function getFiles(str) {
 //    if (str.split('/').length > 1) {
@@ -113,8 +112,7 @@ function setup(projectName, projectPath, isConfig) {
 
         if (ans.imagesConfirm) {
             settings.imagesPath = ans.imagesPath.split(';');
-            console.log('  ' + chalk.grey('Images path') + ' -- ' + chalk.green(ans.imagesPath));
-            console.log('');
+            console.log('  ' + chalk.grey('Images path') + ' -- ' + chalk.green(ans.imagesPath) + '\n');
         }
         if (ans.spriteConfirm) {
             settings.spriteSourcePath = ans.spriteImagesPath;
@@ -126,17 +124,20 @@ function setup(projectName, projectPath, isConfig) {
             console.log('');
         }
 
+        var saveCb = function() {
+            console.log('____________________________\n');
+            message('Looks like this is it, ' + chalk.cyan(userName) + '.');
+            message('To run the bundler type ' + chalk.green('shakal run') + '.');
+            message('If you made a mistake during the project initialization you can fix that with ' +
+            chalk.green('shakal config ' + settings.name) + '.');
+            message('\nMay the force be with you, ' + chalk.cyan(userName) + '.');
+        }
+
         if (isConfig) {
             config.updateProject(settings);
         } else {
-            config.addProject(settings);
+            config.addProject(settings, saveCb);
         }
-
-        message('Looks like this is it, ' + chalk.cyan(userName) + '.');
-        message('To run the bundler type ' + chalk.green('shakal run') + '.');
-        message('If you made a mistake during the project initialization you can fix that with ' +
-        chalk.green('shakal config ' + settings.name) + '.');
-        message('\nMay the force be with you, ' + chalk.cyan(userName) + '.');
     });
 }
 

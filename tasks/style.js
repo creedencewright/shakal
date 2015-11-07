@@ -4,10 +4,9 @@ var less      = require('gulp-less');
 var minifycss = require('gulp-minify-css');
 var plumber   = require('gulp-plumber');
 var prefix    = require('gulp-autoprefixer');
-var getTime = require('../get-time')
-
-var chalk = require('chalk');
-var path  = require('path');
+var getTime   = require('../get-time')
+var chalk     = require('chalk');
+var path      = require('path');
 
 module.exports = function(project) {
     var files = [];
@@ -28,8 +27,7 @@ module.exports = function(project) {
 
             //Error handling
             .pipe(plumber(function(error) {
-                //dialog.warn(error.message);
-                console.log('['+chalk.grey(getTime())+'] ' + chalk.bgRed.white(error.message));
+                console.log('[' + chalk.grey(getTime()) + '] ' + chalk.bgRed.white(error.message));
                 this.emit('end');
             }))
 
@@ -43,9 +41,10 @@ module.exports = function(project) {
             .pipe(gulp.dest(project.path))
             .on('end', function() {
                 var timePassed = Date.now() - startTime;
-                timePassed = timePassed >= 100 ? (timePassed/1000).toFixed(2) + 's' : timePassed + 'ms'
+                timePassed     = timePassed >= 100 ? (timePassed / 1000).toFixed(2) + 's' : timePassed + 'ms'
 
-                console.log('[' + chalk.grey(getTime()) + '] Finished \'' + chalk.cyan(project.name + "_less") + '\' after ' + chalk.magenta(timePassed));
+                console.log('[' + chalk.grey(getTime()) + '] Finished \'' + chalk.cyan(project.name + "_less") +
+                '\' after ' + chalk.magenta(timePassed));
             })
             .pipe(reload());
     });

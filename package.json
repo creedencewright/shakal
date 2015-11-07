@@ -1,6 +1,6 @@
 {
   "name": "shakal",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "client side task runner based on gulp",
   "preferGlobal": true,
   "dependencies": {
@@ -8,15 +8,9 @@
     "commander": "^2.9.0",
     "gaze": "0.5.1",
     "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.1.0",
     "gulp-cached": "^1.1.0",
-    "gulp-imagemin": "^2.4.0",
-    "gulp-less": "^3.0.3",
     "gulp-livereload": "^3.8.1",
-    "gulp-minify-css": "^1.2.1",
     "gulp-plumber": "^1.0.1",
-    "gulp.spritesmith": "^3.8.2",
-    "imagemin-pngquant": "^4.2.0",
     "inquirer": "^0.11.0"
   },
   "scripts": {
@@ -26,5 +20,21 @@
     "shakal": "index.js"
   },
   "author": "Denis Smirnov",
-  "license": "ISC"
+  "license": "ISC",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creedencewright/shakal.git"
+  },
+  "keywords": [
+    "bundler",
+    "gulp",
+    "task",
+    "manager"
+  ],
+  "bugs": {
+    "url": "https://github.com/creedencewright/shakal/issues"
+  },
+  "homepage": "https://github.com/creedencewright/shakal#readme"
 }

@@ -57,8 +57,8 @@ function setQuestions(projectName, folderName, config, isConfig) {
                 console.log('\n  Well, nice to meet you, ' + chalk.cyan(name) + '!\n');
             }
 
-            var text = !projectName ? 'Do you wish your images to be optimized?' : chalk.cyan(name) +
-            ', do you wish your images to be optimized?';
+            var text = !projectName ? 'Do you want your images to be optimized?' : chalk.cyan(name) +
+            ', do you want your images to be optimized?';
 
             return text;
         }
