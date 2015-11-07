@@ -98,7 +98,7 @@ function setup(projectName, projectPath, isConfig) {
             settings.stylePath         = ans.stylePath.split(';');
             settings.styleCssPath      =
                 ans.styleCssPath === 'same folder' ? path.dirname(ans.stylePath) : ans.styleCssPath;
-            settings.styleAutoprefixer = ans.autoPrefixConfirm ? ans.autoPrefixParam : false;
+            settings.styleAutoprefixer = ans.styleAutoprefixConfirm ? ans.styleAutoprefixParam : false;
 
             console.log('  ' + chalk.grey('CSS Pre-processing') + ' -- ' + chalk.green(ans.styleProcessor));
             console.log('  ' + chalk.grey('Styles source path') + ' -- ' + chalk.green(ans.stylePath));

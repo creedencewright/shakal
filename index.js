@@ -15,7 +15,7 @@ var message = require('./message');
 var command;
 
 program
-    .version('0.2.4')
+    .version('0.2.6')
 
 program
     .command('list')

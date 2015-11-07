@@ -3,12 +3,14 @@ var reload    = require('gulp-livereload');
 var less      = require('gulp-less');
 var minifycss = require('gulp-minify-css');
 var plumber   = require('gulp-plumber');
-var prefix    = require('gulp-autoprefixer');
 var getTime   = require('../get-time')
 var chalk     = require('chalk');
 var path      = require('path');
 
 module.exports = function(project) {
+    if (project.styleAutoprefixer) {
+        var prefix = require('gulp-autoprefixer');
+    }
     var files = [];
 
     console.log(chalk.cyan('Stylesheets'));
