@@ -12,6 +12,6 @@ To add a new one just type `shakal add` **inside** project directory.
 
 Type `shakal list` to see added projects.
 
-You can `remove` or `deactivate` projects the projects you don't need.
+You can `remove` or `deactivate` the projects you don't need.
 
 When you run the manager it'll take the **active** projects and generate gulp tasks using the parameters you've specified during the adding.
