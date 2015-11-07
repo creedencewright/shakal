@@ -14,4 +14,4 @@ Type `shakal list` to see added projects.
 
 You can `remove` or `deactivate` the projects you don't need.
 
-When you run the manager it'll take the **active** projects and generate gulp tasks using the parameters you've specified during the adding.
+When you run the manager it takes the **active** projects and generates gulp tasks using the parameters you've specified during the adding.
