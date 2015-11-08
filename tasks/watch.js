@@ -36,7 +36,7 @@ module.exports = function(project) {
         }
 
         if (project.imagesPath) {
-            gaze(project.imagesPath + "**/*.png", gazeParams, function(error) {
+            gaze(project.imagesPath + "**/*.+(jpg|png)", gazeParams, function(error) {
                 this.on('added', function(filepath) {
                     console.log('[' + chalk.grey(getTime()) + '] ' +
                     chalk.green(path.basename(filepath) + " was added"));

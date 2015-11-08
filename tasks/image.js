@@ -12,7 +12,7 @@ module.exports = function(project) {
     console.log(chalk.cyan('Images'));
 
     project.imagesPath.forEach(function(folder) {
-        folder = path.normalize(project.path + folder + '**/*.png');
+        folder = path.normalize(project.path + folder + '**/*.+(jpg|png)');
         folders.push(folder);
         console.log(folder + '\n');
     });
@@ -23,7 +23,10 @@ module.exports = function(project) {
 
         gulp.src(folders, {base: project.path})
             .pipe(cache('min'))
-            .pipe(imagemin({use: [pngquant()]}))
+            .pipe(imagemin({
+                progressive: true,
+                use: [pngquant()]
+            }))
             .on('end', function() {
                 var timePassed = Date.now() - startTime;
                 timePassed = timePassed >= 100 ? (timePassed/1000).toFixed(2) + 's' : timePassed + 'ms'

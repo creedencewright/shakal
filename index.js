@@ -10,12 +10,11 @@ var add     = require('./add');
 var run     = require('./run');
 var chalk   = require('chalk');
 var config  = require('./config');
-var message = require('./message');
 
 var command;
 
 program
-    .version('0.2.6')
+    .version('0.2.8')
 
 program
     .command('list')
@@ -37,7 +36,7 @@ program
     .action(function(projectName) {
         command = true;
         config.changeProjectState(projectName, true);
-        message('\nDone! This was easy!\n' + chalk.green(projectName.join(', ')), 'white');
+        console.log(chalk.white('\nDone! This was easy!\n' + chalk.green(projectName.join(', '))));
     });
 
 program
@@ -45,7 +44,7 @@ program
     .action(function(projectName) {
         command = true;
         config.changeProjectState(projectName, false);
-        message('\nDone! This was easy!\n' + chalk.grey(projectName.join(', ')), 'white');
+        console.log(chalk.white('\nDone! This was easy!\n' + chalk.grey(projectName.join(', '))));
     });
 
 program
@@ -53,7 +52,7 @@ program
     .action(function(projectName) {
         command = true;
         config.removeProjects(projectName);
-        message('\nDone!\n' + chalk.grey(projectName.join(', ')), 'red');
+        console.log(chalk.red('\nDone!\n' + chalk.grey(projectName.join(', '))));
     });
 
 program

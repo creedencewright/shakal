@@ -1,6 +1,5 @@
 var inquirer = require("inquirer");
 
-var message = require('./message');
 var config  = require('./config');
 var chalk   = require('chalk');
 var path    = require('path');
@@ -49,7 +48,7 @@ function setup(projectName, projectPath, isConfig) {
     var settings   = {};
 
     if (projectName) {
-        message('Setting up ' + projectName.toUpperCase() + '...\n', 'green');
+        console.log(chalk.green('Setting up ' + projectName.toUpperCase() + '...\n'));
     }
 
     if (projectName) {
@@ -83,13 +82,13 @@ function setup(projectName, projectPath, isConfig) {
         }
 
         if (!isConfig && config.isNameOccupied(settings.name)) {
-            message('\n' + userName + ', you already have a project with this name - <' + settings.name +
-            '>', 'white', 'bgRed');
+            console.log(chalk.bgRed.white('\n' + userName + ', you already have a project with this name - <' + settings.name +
+            '>', 'white', 'bgRed'));
             process.exit();
         }
 
-        message('\n-__-\n', 'green');
-        message('So, this is what we have here:\n  ');
+        console.log(chalk.green('\n-__-\n'));
+        console.log('So, this is what we have here:\n  ');
 
         settings.active = true;
 
@@ -126,11 +125,11 @@ function setup(projectName, projectPath, isConfig) {
 
         var saveCb = function() {
             console.log('____________________________\n');
-            message('Looks like this is it, ' + chalk.cyan(userName) + '.');
-            message('To run the bundler type ' + chalk.green('shakal run') + '.');
-            message('If you made a mistake during the project initialization you can fix that with ' +
+            console.log('Looks like this is it, ' + chalk.cyan(userName) + '.');
+            console.log('To run the bundler type ' + chalk.green('shakal run') + '.');
+            console.log('If you made a mistake during the project initialization you can fix that with ' +
             chalk.green('shakal config ' + settings.name) + '.');
-            message('\nMay the force be with you, ' + chalk.cyan(userName) + '.');
+            console.log('\nMay the force be with you, ' + chalk.cyan(userName) + '.');
         }
 
         if (isConfig) {
@@ -145,7 +144,7 @@ function add(projectName, isConfig) {
     var currentPath = process.cwd();
 
     if (!isConfig) {
-        message('Started new project initialization in ' + chalk.green(currentPath));
+        console.log('Started new project initialization in ' + chalk.green(currentPath));
     }
 
     setup(projectName, currentPath, isConfig);
