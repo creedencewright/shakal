@@ -7,7 +7,16 @@ var CONFIG_PATH = DIRECTORY + '/config.json';
 
 var names = ['Cowboy', 'Young padawan', 'Web Developer', 'Friend', 'Developer'];
 
-var data = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+var data = _getConfig();
+
+function _getConfig() {
+    try {
+        fs.accessSync(CONFIG_PATH);
+        return fs.readFileSync(CONFIG_PATH, 'utf8');
+    } catch(e) {
+        return {projects: [], userName: ''};
+    }
+}
 
 var config = {
     changeProjectState: function(projects, state) {

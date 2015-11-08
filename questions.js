@@ -174,7 +174,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
     var spriteCssQ = {
         name: 'spriteCssPath',
         message: 'Got it! Almost forgot, I need to know where do I put generated sprite-styles file...\n' +
-        chalk.grey(projectPath) + '>',
+        chalk.grey(path.normalize(projectPath + '/')) + '>',
         when: function(ans) {
             return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
         }
