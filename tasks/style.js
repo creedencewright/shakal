@@ -6,11 +6,13 @@ var plumber   = require('gulp-plumber');
 var getTime   = require('../get-time')
 var chalk     = require('chalk');
 var path      = require('path');
+var notify = require('../utils/notifier');
 
-module.exports = function(project) {
+module.exports = function(project, config, params) {
     if (project.styleAutoprefixer) {
         var prefix = require('gulp-autoprefixer');
     }
+
     var files = [];
 
     console.log(chalk.cyan('Stylesheets'));
@@ -30,6 +32,7 @@ module.exports = function(project) {
             //Error handling
             .pipe(plumber(function(error) {
                 console.log('[' + chalk.grey(getTime()) + '] ' + chalk.bgRed.white(error.message));
+                if (params.notify) notify('Damn, ' + config.getName()+'!', error.message);
                 this.emit('end');
             }))
 

@@ -12,7 +12,7 @@ var data = _getConfig();
 function _getConfig() {
     try {
         fs.accessSync(CONFIG_PATH);
-        return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+        return fs.readFileSync(CONFIG_PATH, 'utf8');
     } catch(e) {
         return {projects: [], userName: ''};
     }

@@ -4,17 +4,16 @@
  * Module dependencies.
  */
 
-var program = require('commander');
-var list    = require('./list');
-var add     = require('./add');
-var run     = require('./run');
-var chalk   = require('chalk');
-var config  = require('./config');
-
-var command;
+var program  = require('commander');
+var list     = require('./list');
+var add      = require('./add');
+var run      = require('./run');
+var chalk    = require('chalk');
+var config   = require('./config');
+var path     = require('path');
 
 program
-    .version('0.2.8')
+    .version('0.2.10')
 
 program
     .command('list')
@@ -64,9 +63,10 @@ program
 
 program
     .command('run')
-    .action(function(projectName) {
+    .option('-N, --notify', 'Turn on system notifications')
+    .action(function(opts) {
         command = true;
-        run();
+        run(opts);
     });
 
 program.parse(process.argv);
