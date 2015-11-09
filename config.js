@@ -12,13 +12,16 @@ var data = _getConfig();
 function _getConfig() {
     try {
         fs.accessSync(CONFIG_PATH);
-        return fs.readFileSync(CONFIG_PATH, 'utf8');
+        return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
     } catch(e) {
         return {projects: [], userName: ''};
     }
 }
 
 var config = {
+    getDirectory: function() {
+        return DIRECTORY;
+    },
     changeProjectState: function(projects, state) {
         data.projects.forEach(function(p, i) {
             if (projects.indexOf(p.name) !== -1) {

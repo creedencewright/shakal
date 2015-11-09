@@ -13,7 +13,7 @@ var config   = require('./config');
 var path     = require('path');
 
 program
-    .version('0.2.10')
+    .version('0.2.11')
 
 program
     .command('list')
