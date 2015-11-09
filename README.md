@@ -1,4 +1,4 @@
-# shakal
+# ![alt text](https://raw.githubusercontent.com/creedencewright/shakal/master/assets/icon.png "shakal") shakal
 #### Friendly CLI task manager
 #####```npm i -g shakal```
 ---
