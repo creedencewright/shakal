@@ -9,6 +9,7 @@
     "gaze": "0.5.1",
     "gulp": "^3.9.0",
     "gulp-cached": "^1.1.0",
+    "node-notifier": "^4.3.1",
     "gulp-livereload": "^3.8.1",
     "gulp-plumber": "^1.0.1",
     "inquirer": "^0.11.0"
