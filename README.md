@@ -5,12 +5,12 @@
 
 `shakal` compiles styles, optimizes images and generates sprites. (`browserify` support is coming soon)
 
+The key feature is that `shakal` lives as a global module, making it possible to work with several projects. 
+
 `shakal` also has lazy retina support. It means that when building a sprite `shakal` checks for each image if it has a @2x version (like `image-name@2x.png`). If it does -- `shakal` generates a media query inside .sprite() mixin that will switch to a @2x image on a high-dpi device.
 
 
-The key feature is that `shakal` lives as a global module, making it possible to work with several projects. 
-
-To add a new one just type `shakal add` **inside** a project directory.
+To add a new project just type `shakal add` **inside** a project directory.
 
 Type `shakal list` to see added projects.
 
