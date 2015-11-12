@@ -11,6 +11,7 @@ function run(params) {
     var image = require('./tasks/image');
 
     var tasks = [];
+
     projects.forEach(function(project) {
         console.log(chalk.green('\n' + project.name + '\n---'));
 

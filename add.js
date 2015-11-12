@@ -1,8 +1,8 @@
 var inquirer = require("inquirer");
 
-var config  = require('./config');
-var chalk   = require('chalk');
-var path    = require('path');
+var config = require('./config');
+var chalk  = require('chalk');
+var path   = require('path');
 
 //function getFiles(str) {
 //    if (str.split('/').length > 1) {
@@ -82,7 +82,8 @@ function setup(projectName, projectPath, isConfig) {
         }
 
         if (!isConfig && config.isNameOccupied(settings.name)) {
-            console.log(chalk.bgRed.white('\n' + userName + ', you already have a project with this name - <' + settings.name +
+            console.log(chalk.bgRed.white('\n' + userName + ', you already have a project with this name - <' +
+            settings.name +
             '>', 'white', 'bgRed'));
             process.exit();
         }
@@ -116,6 +117,7 @@ function setup(projectName, projectPath, isConfig) {
         if (ans.spriteConfirm) {
             settings.spriteSourcePath = ans.spriteImagesPath;
             settings.spritePath       = ans.spritePath;
+            settings.spriteRetina     = ans.spriteRetina;
             settings.spriteCssPath    = ans.spriteCssPath;
             console.log('  ' + chalk.grey('Sprite source path') + ' -- ' + chalk.green(ans.spriteImagesPath));
             console.log('  ' + chalk.grey('Generated sprite path') + ' -- ' + chalk.green(ans.spritePath));

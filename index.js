@@ -14,7 +14,7 @@ var config   = require('./config');
 var command = false;
 
 program
-    .version('0.2.14')
+    .version('0.3.0')
 
 program
     .command('list')

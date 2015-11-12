@@ -1,5 +1,4 @@
 var gulp        = require('gulp');
-var imagemin    = require('gulp-imagemin');
 var pngquant    = require('imagemin-pngquant');
 var path        = require('path');
 var spritesmith = require('gulp.spritesmith');
@@ -8,11 +7,13 @@ var plumber     = require('gulp-plumber');
 var getTime     = require('../get-time');
 var notify      = require('../utils/notifier');
 
+var handleBarsHelpers = require('./handlebars-helpers');
+
 var FILE_NAME = 'sprite';
 
 module.exports = function(project, config, params) {
     console.log(chalk.cyan('Sprite'));
-    console.log('Looking for images in ' + chalk.green(project.spriteSourcePath) + '...\n');
+    console.log('Looking for images in ' + chalk.green(path.normalize(project.path + project.spriteSourcePath)) + '...\n');
 
     gulp.task(project.name + '_sprite', function() {
         var startTime      = Date.now();
@@ -24,7 +25,20 @@ module.exports = function(project, config, params) {
         console.log('[' + chalk.grey(getTime()) + '] ' + 'Starting \'' + chalk.cyan(project.name + "_sprite") +
         '\'...');
 
-        var spriteData = gulp.src(srcPath + '*.+(png|jpg)')
+        var spritesmithConfig = {
+            imgName: fromCssToImg + FILE_NAME + '.png',
+            cssName: FILE_NAME + '.less',
+            cssFormat: 'less',
+            algorithm: 'binary-tree',
+            padding: 2
+        };
+
+        if (project.spriteRetina) {
+            spritesmithConfig.cssHandlebarsHelpers =  handleBarsHelpers;
+            spritesmithConfig.cssTemplate =  path.normalize(config.getDirectory() + '/tasks/less-sprite-template.handlebars');
+        }
+
+        var spriteData = gulp.src(srcPath + '**/*.+(png|jpg)')
 
             //Error handling
             .pipe(plumber(function(error) {
@@ -33,31 +47,7 @@ module.exports = function(project, config, params) {
                 this.emit('end');
             }))
 
-            .pipe(spritesmith({
-                imgName: fromCssToImg + FILE_NAME + '.png',
-                cssName: FILE_NAME + '.less',
-                cssFormat: 'less',
-                algorithm: 'binary-tree',
-                padding: 2,
-                cssHandlebarsHelpers: {
-                    math: function(lvalue, operator, rvalue, options) {
-                        lvalue = parseFloat(lvalue);
-                        rvalue = parseFloat(rvalue);
-
-                        return {
-                            "+": lvalue + rvalue,
-                            "-": lvalue - rvalue,
-                            "*": lvalue * rvalue,
-                            "/": lvalue / rvalue,
-                            "%": lvalue % rvalue
-                        }[operator];
-                    },
-                    retinize: function(data, name) {
-                        return data.sprites.filter(function(s) {return s.name === name + '@2x';}).length !== 0;
-                    }
-                },
-                cssTemplate: path.normalize(config.getDirectory() + '/tasks/less-sprite-template.handlebars')
-            }));
+            .pipe(spritesmith(spritesmithConfig));
 
         spriteData.img
             .pipe(pngquant({quality: '65-80', speed: 4})())

@@ -46,7 +46,7 @@ module.exports = function(project) {
         }
 
         if (project.spriteSourcePath) {
-            gaze(project.spriteSourcePath + "*.*", gazeParams, function(error) {
+            gaze(project.spriteSourcePath + "**/*.*", gazeParams, function(error) {
                 this.on('added', function(filepath) {
                     console.log('[' + chalk.grey(getTime()) + '] ' +
                     chalk.green(path.basename(filepath) + " was added"));

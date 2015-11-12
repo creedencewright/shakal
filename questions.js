@@ -9,7 +9,8 @@ function setQuestions(projectName, folderName, config, isConfig) {
         project = config.getProject(projectName);
 
         if (!project) {
-            console.log(chalk.cyan(config.getName()) + ', I didn\'t find a project with this name - ' + chalk.bgRed.white(projectName));
+            console.log(chalk.cyan(config.getName()) + ', I didn\'t find a project with this name - ' +
+            chalk.bgRed.white(projectName));
             return [];
         }
 
@@ -171,6 +172,17 @@ function setQuestions(projectName, folderName, config, isConfig) {
         }
     };
 
+    var spriteRetinaQ = {
+        name: 'spriteRetina',
+        type: 'confirm',
+        default: true,
+        message: 'Do you want high-dpi images support? \n  You will still be able to set an image from sprite via ' +
+        chalk.green('.sprite(@image-name)') + '. \n  If you have an '+ chalk.cyan('image-name@2x.png') +' image, a media query for high dpi devices will be generated inside ' + chalk.green('.sprite()') + ' mixin.\n',
+        when: function(ans) {
+            return ans.spriteConfirm && (ans.projectNameConfirm || projectName);
+        }
+    };
+
     var spriteCssQ = {
         name: 'spriteCssPath',
         message: 'Got it! Almost forgot, I need to know where do I put generated sprite-styles file...\n' +
@@ -193,15 +205,18 @@ function setQuestions(projectName, folderName, config, isConfig) {
         if (project.spritePath) {
             spritePathQ.default = project.spritePath;
         }
-        if (project.spriteCssPathPath) {
-            spriteCssQ.default = project.spriteCssPathPath;
+        if (project.spriteRetina) {
+            spriteRetinaQ.default = project.spriteRetina;
+        }
+        if (project.spriteCssPath) {
+            spriteCssQ.default = project.spriteCssPath;
         }
 
         styleCssPathQ.default = project.styleCssPath ? project.styleCssPath : 'same folder';
         prefParamQ.default    = project.styleAutoprefixer ? project.styleAutoprefixer : 'last 3 versions';
     }
 
-    questions.push(userQ, projectNameQ, imagesConfirmQ, imagesPathQ, styleProcessorQ, stylePathQ, styleCssPathQ, prefQ, prefParamQ, spriteConfirmQ, spriteImagesQ, spritePathQ, spriteCssQ);
+    questions.push(userQ, projectNameQ, imagesConfirmQ, imagesPathQ, styleProcessorQ, stylePathQ, styleCssPathQ, prefQ, prefParamQ, spriteConfirmQ, spriteImagesQ, spritePathQ, spriteRetinaQ, spriteCssQ);
 
     return questions;
 }

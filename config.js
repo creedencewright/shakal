@@ -24,7 +24,7 @@ function _getConfig() {
 
 var config = {
     getDirectory: function() {
-        return HOME_DIRECTORY;
+        return path.normalize(path.dirname(process.argv[1]));
     },
     changeProjectState: function(projects, state) {
         data.projects.forEach(function(p, i) {
@@ -140,7 +140,7 @@ var _resolveDependencies = function(project, cb) {
     }
 
     if (dependencies.length) {
-        console.log(chalk.green('Go grab a coffee') + ', ' + chalk.cyan(config.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
+        console.log(chalk.green('Go grab a cup coffee') + ', ' + chalk.cyan(config.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
 
         var moduleDir = path.dirname(process.argv[1]);
         var exec = require('child_process').exec;
