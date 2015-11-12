@@ -10,7 +10,6 @@ var add      = require('./add');
 var run      = require('./run');
 var chalk    = require('chalk');
 var config   = require('./config');
-var path     = require('path');
 
 program
     .version('0.2.11')
