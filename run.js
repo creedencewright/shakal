@@ -3,13 +3,13 @@ var config  = require('./config');
 var gulp    = require('gulp');
 var notify  = require('./utils/notifier');
 
-var style = require('./tasks/style');
-var sprite = require('./tasks/sprite');
-var image = require('./tasks/image');
-
 var projects = config.getProjects(true);
 
 function run(params) {
+    var style = require('./tasks/style');
+    var sprite = require('./tasks/sprite');
+    var image = require('./tasks/image');
+
     var tasks = [];
     projects.forEach(function(project) {
         console.log(chalk.green('\n' + project.name + '\n---'));

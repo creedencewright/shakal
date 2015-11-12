@@ -12,7 +12,7 @@ var chalk    = require('chalk');
 var config   = require('./config');
 
 program
-    .version('0.2.11')
+    .version('0.2.13')
 
 program
     .command('list')
