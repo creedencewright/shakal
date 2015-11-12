@@ -11,8 +11,10 @@ var run      = require('./run');
 var chalk    = require('chalk');
 var config   = require('./config');
 
+var command = false;
+
 program
-    .version('0.2.13')
+    .version('0.2.14')
 
 program
     .command('list')

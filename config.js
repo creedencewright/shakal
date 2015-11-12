@@ -2,12 +2,16 @@ var fs   = require('fs');
 var path = require('path');
 var chalk = require('chalk');
 
-var DIRECTORY   = path.dirname(process.argv[1]);
-var CONFIG_PATH = DIRECTORY + '/config.json';
+var HOME_DIRECTORY   = path.normalize(_getUserHome());
+var CONFIG_PATH = HOME_DIRECTORY + '/.shakal.config.json';
 
 var names = ['Cowboy', 'Young padawan', 'Web Developer', 'Friend', 'Developer'];
 
 var data = _getConfig();
+
+function _getUserHome() {
+    return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
 
 function _getConfig() {
     try {
@@ -20,7 +24,7 @@ function _getConfig() {
 
 var config = {
     getDirectory: function() {
-        return DIRECTORY;
+        return HOME_DIRECTORY;
     },
     changeProjectState: function(projects, state) {
         data.projects.forEach(function(p, i) {
