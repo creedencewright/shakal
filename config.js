@@ -140,14 +140,14 @@ var _resolveDependencies = function(project, cb) {
     }
 
     if (dependencies.length) {
-        console.log(chalk.green('Go grab a cup coffee') + ', ' + chalk.cyan(config.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
+        console.log(chalk.green('Go grab a cup of coffee') + ', ' + chalk.cyan(config.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
 
         var moduleDir = path.dirname(process.argv[1]);
         var exec = require('child_process').exec;
         var install = exec('npm i ' + dependencies.join(' '), {cwd: moduleDir});
         install.stdout.on('data', function(data) {
             console.log(data);
-        })
+        });
         install.stderr.on('data', function (data) {
             console.log(data);
         });
