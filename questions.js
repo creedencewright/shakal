@@ -6,7 +6,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
         projectPath = process.cwd();
 
     if (isConfig) {
-        project = config.getProject(projectName);
+        project = config.getProjectByName(projectName);
 
         if (!project) {
             console.log(chalk.cyan(config.getName()) + ', I didn\'t find a project with this name - ' +
@@ -185,7 +185,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
 
     var spriteCssQ = {
         name: 'spriteCssPath',
-        message: 'Got it! Almost forgot, I need to know where do I put generated sprite-styles file...\n' +
+        message: 'Got it! Almost forgot, I need to know where do I put generated sprite-styles file... Leave empty if you only want to build a sprite.\n' +
         chalk.grey(path.normalize(projectPath + '/')) + '>',
         when: function(ans) {
             return ans.spriteConfirm && (ans.projectNameConfirm || projectName);

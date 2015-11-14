@@ -4,12 +4,12 @@
  * Module dependencies.
  */
 
-var program  = require('commander');
-var list     = require('./list');
-var add      = require('./add');
-var run      = require('./run');
-var chalk    = require('chalk');
-var config   = require('./config');
+var program = require('commander');
+var list    = require('./list');
+var add     = require('./add');
+var run     = require('./run');
+var chalk   = require('chalk');
+var config  = require('./config');
 
 var command = false;
 
@@ -19,9 +19,17 @@ program
 program
     .command('list')
     .option('--active', 'List only active projects')
+    .option('--detail', 'List projects with detail info')
     .action(function(options) {
         command = true;
-        list(config.getProjects(), options.active)
+        list(config.getProjects(), options)
+    });
+
+program
+    .command('update')
+    .action(function(options) {
+        command = true;
+        config.updateDependencies();
     });
 
 program

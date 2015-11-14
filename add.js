@@ -64,7 +64,7 @@ function setup(projectName, projectPath, isConfig) {
 
     inquirer.prompt(questions, function(ans) {
         if (isConfig) {
-            var project = config.getProject(projectName);
+            var project = config.getProjectByName(projectName);
         }
 
         settings.name = ans.projectNameConfirm ? ans.projectNameConfirm : projectName;
@@ -118,7 +118,7 @@ function setup(projectName, projectPath, isConfig) {
             settings.spriteSourcePath = ans.spriteImagesPath;
             settings.spritePath       = ans.spritePath;
             settings.spriteRetina     = ans.spriteRetina;
-            settings.spriteCssPath    = ans.spriteCssPath;
+            settings.spriteCssPath    = ans.spriteCssPath ? ans.spriteCssPath : false;
             console.log('  ' + chalk.grey('Sprite source path') + ' -- ' + chalk.green(ans.spriteImagesPath));
             console.log('  ' + chalk.grey('Generated sprite path') + ' -- ' + chalk.green(ans.spritePath));
             console.log('  ' + chalk.grey('Generated sprite style path') + ' -- ' + chalk.green(ans.spriteCssPath));

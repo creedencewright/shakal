@@ -1,163 +1,181 @@
-var fs   = require('fs');
-var path = require('path');
+var fs    = require('fs');
+var path  = require('path');
 var chalk = require('chalk');
 
-var HOME_DIRECTORY   = path.normalize(_getUserHome());
-var CONFIG_PATH = HOME_DIRECTORY + '/.shakal.config.json';
+var HOME_DIRECTORY = path.normalize(process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME']);
+var CONFIG_PATH    = HOME_DIRECTORY + '/.shakal.config.json';
 
-var names = ['Cowboy', 'Young padawan', 'Web Developer', 'Friend', 'Developer'];
-
-var data = _getConfig();
-
-function _getUserHome() {
-    return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-}
-
-function _getConfig() {
-    try {
-        fs.accessSync(CONFIG_PATH);
-        return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
-    } catch(e) {
-        return {projects: [], userName: ''};
-    }
-}
+var names = ['Cowboy', 'Young padawan', 'Web Developer', 'Friend', 'Developer', 'Colleague'];
 
 var config = {
+    _data: _getConfigFile(),
+    getDependencies: function() {
+        return this._data.deps;
+    },
+    updateDependencies: function() {
+        var deps = this.getDependencies();
+        this._installDeps(deps, function() {
+            console.log(chalk.green('\nDone!\n') + chalk.yellow(deps.join(' ')));
+        })
+    },
+    setDependencies: function(dependencies) {
+        this._data.deps = this._data.deps.concat(dependencies);
+        this._data.deps = this._data.deps.filter(function(dep, i) {
+            return this._data.deps.indexOf(dep) === i
+        }.bind(this));
+    },
     getDirectory: function() {
         return path.normalize(path.dirname(process.argv[1]));
     },
     changeProjectState: function(projects, state) {
-        data.projects.forEach(function(p, i) {
+        this._data.projects.forEach(function(p, i) {
             if (projects.indexOf(p.name) !== -1) {
-                data.projects[i].active = state;
+                this._data.projects[i].active = state;
             }
-        });
+        }.bind(this));
 
-        config._write();
+        this._write();
     },
     isNameOccupied: function(name) {
-        return data.projects.filter(function(p) { return p.name === name; }).length;
+        return this._data.projects.filter(function(p) { return p.name === name; }).length;
     },
     getRandomName: function() {
         return names[Math.floor(Math.random() * names.length)];
     },
     removeProjects: function(projects) {
-        data.projects = data.projects.filter(function(p) { return projects.indexOf(p.name) === -1 });
-        config._write();
+        this._data.projects = this._data.projects.filter(function(p) { return projects.indexOf(p.name) === -1 });
+        this._write();
     },
     _write: function() {
-        fs.writeFileSync(CONFIG_PATH, JSON.stringify(data));
+        fs.writeFileSync(CONFIG_PATH, JSON.stringify(this._data));
     },
     addProject: function(project, cb) {
-        _resolveDependencies(project, function() {
-            data.projects.push(project);
-            config._write();
+        this.resolveDeps(project, function(dependencies) {
+            if (dependencies.length) this.setDependencies(dependencies);
+
+            this._data.projects.push(project);
+            this._write();
 
             cb();
-        });
+        }.bind(this));
     },
     updateProject: function(project, cb) {
-        _resolveDependencies(project, function() {
-            var projectToUpdate = config.getProject(project.name);
-            var i               = data.projects.indexOf(projectToUpdate);
-            data.projects[i]    = project;
-            config._write();
+        this.resolveDeps(project, function(dependencies) {
+            var projectToUpdate = this.getProjectByName(project.name);
+            var i               = this._data.projects.indexOf(projectToUpdate);
+
+            if (dependencies.length) this.setDependencies(dependencies);
+
+            this._data.projects[i] = project;
+            this._write();
 
             cb();
-        });
+        }.bind(this));
     },
     setName: function(name) {
-        data.userName = name;
-        config._write();
+        this._data.userName = name;
+        this._write();
     },
     getName: function() {
-        return data.userName;
+        return this._data.userName;
     },
-    getProject: function(name) {
-        return data.projects.filter(function(p) {return p.name === name})[0];
+    getProjectByName: function(name) {
+        return this._data.projects.filter(function(p) {return p.name === name})[0];
     },
     getProjects: function(onlyActive) {
         if (onlyActive) {
-            return data.projects.filter(function(p) {return p.active;});
+            return this._data.projects.filter(function(p) {return p.active;});
         }
-        return data.projects;
-    }
-}
-
-var _resolveDependencies = function(project, cb) {
-    console.log('\nChecking dependencies...');
-    var dependencies = [];
-    if (project.styleProcessor) {
-        try {
-            require.resolve('gulp-less');
-        } catch (err) {
-            dependencies.push('gulp-less');
-        }
-        try {
-            require.resolve('gulp-minify-css');
-        } catch (err) {
-            dependencies.push('gulp-minify-css');
-        }
-
-        if (project.styleAutoprefixer) {
-            try {
-                require.resolve('gulp-autoprefixer');
-            } catch (err) {
-                dependencies.push('gulp-autoprefixer');
-            }
-        }
-    }
-
-    if (project.imagesPath) {
-        try {
-            require.resolve('gulp-imagemin');
-        } catch (err) {
-            dependencies.push('gulp-imagemin');
-        }
-        try {
-            require.resolve('imagemin-pngquant');
-        } catch (err) {
-            dependencies.push('imagemin-pngquant');
-        }
-    }
-
-    if (project.spriteSourcePath) {
-        try {
-            require.resolve('gulp-imagemin');
-        } catch (err) {
-            if (dependencies.indexOf('gulp-imagemin') === -1) dependencies.push('gulp-imagemin');
-        }
-        try {
-            require.resolve('gulp.spritesmith');
-        } catch (err) {
-            dependencies.push('gulp.spritesmith');
-        }
-        try {
-            require.resolve('imagemin-pngquant');
-        } catch (err) {
-            if (dependencies.indexOf('imagemin-pngquant') === -1) dependencies.push('imagemin-pngquant');
-        }
-    }
-
-    if (dependencies.length) {
-        console.log(chalk.green('Go grab a cup of coffee') + ', ' + chalk.cyan(config.getName())+'! I\'m going to install '+chalk.yellow(dependencies.join(' '))+'\n');
+        return this._data.projects;
+    },
+    _installDeps: function(dependencies, cb) {
+        console.log(chalk.green('Go grab a cup of coffee') + ', ' + chalk.cyan(this.getName()) +
+        '! I\'m going to install ' + chalk.yellow(dependencies.join(' ')) + '\n');
 
         var moduleDir = path.dirname(process.argv[1]);
-        var exec = require('child_process').exec;
-        var install = exec('npm i ' + dependencies.join(' '), {cwd: moduleDir});
+        var exec      = require('child_process').exec;
+        var install   = exec('npm i ' + dependencies.join(' '), {cwd: moduleDir});
         install.stdout.on('data', function(data) {
             console.log(data);
         });
-        install.stderr.on('data', function (data) {
+        install.stderr.on('data', function(data) {
             console.log(data);
         });
-        install.stderr.on('close', function () {
-            cb();
+        install.stderr.on('close', function() {
+            cb(dependencies);
         });
-    } else {
-        console.log(chalk.green('OK\n'));
-        cb();
+    },
+
+    resolveDeps: function(project, cb) {
+        console.log('\nChecking dependencies...');
+        var dependencies = [];
+        if (project.styleProcessor) {
+            try {
+                require.resolve('gulp-less');
+            } catch (err) {
+                dependencies.push('gulp-less');
+            }
+            try {
+                require.resolve('gulp-minify-css');
+            } catch (err) {
+                dependencies.push('gulp-minify-css');
+            }
+            if (project.styleAutoprefixer) {
+                try {
+                    require.resolve('gulp-autoprefixer');
+                } catch (err) {
+                    dependencies.push('gulp-autoprefixer');
+                }
+            }
+        }
+
+        if (project.imagesPath) {
+            try {
+                require.resolve('gulp-imagemin');
+            } catch (err) {
+                dependencies.push('gulp-imagemin');
+            }
+            try {
+                require.resolve('imagemin-pngquant');
+            } catch (err) {
+                dependencies.push('imagemin-pngquant');
+            }
+        }
+
+        if (project.spriteSourcePath) {
+            try {
+                require.resolve('gulp-imagemin');
+            } catch (err) {
+                if (dependencies.indexOf('gulp-imagemin') === -1) dependencies.push('gulp-imagemin');
+            }
+            try {
+                require.resolve('gulp.spritesmith');
+            } catch (err) {
+                dependencies.push('gulp.spritesmith');
+            }
+            try {
+                require.resolve('imagemin-pngquant');
+            } catch (err) {
+                if (dependencies.indexOf('imagemin-pngquant') === -1) dependencies.push('imagemin-pngquant');
+            }
+        }
+
+        if (dependencies.length) {
+            this._installDeps(dependencies, cb);
+        } else {
+            console.log(chalk.green('OK\n'));
+            cb([]);
+        }
     }
-};
+}
+
+function _getConfigFile() {
+    try {
+        fs.accessSync(CONFIG_PATH);
+        return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+    } catch (e) {
+        return {projects: [], userName: '', deps: []};
+    }
+}
 
 module.exports = config;

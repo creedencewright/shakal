@@ -42,7 +42,8 @@ module.exports = function(project, config, params) {
             bundle.pipe(prefix(project.styleAutoprefixer))
         }
 
-        bundle.pipe(minifycss())
+        bundle
+            .pipe(minifycss())
             .pipe(gulp.dest(project.path))
             .on('end', function() {
                 var timePassed = Date.now() - startTime;
