@@ -13,6 +13,7 @@ module.exports = function(project) {
     if (project.imagesPath) { start.push(project.name + "_image"); }
     if (project.styleProcessor) { start.push(project.name + "_less"); }
     if (project.spriteSourcePath) { start.push(project.name + "_sprite"); }
+    if (project.browserifySource) { start.push(project.name + "_browserify"); }
 
     gulp.task(project.name + "_watch", start, function() {
         if (project.styleProcessor) {

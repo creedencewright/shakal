@@ -124,6 +124,20 @@ function setup(projectName, projectPath, isConfig) {
             console.log('  ' + chalk.grey('Generated sprite style path') + ' -- ' + chalk.green(ans.spriteCssPath));
             console.log('');
         }
+        if (ans.browserifyConfirm) {
+            settings.browserifySource     = ans.browserifySource;
+
+            settings.browserifyDist       =
+                ans.browserifyDist ===
+                'same folder' ? path.dirname(ans.browserifySource) :  ans.browserifyDist;
+
+            settings.browserifyTransforms = ans.browserifyTransforms ? ans.browserifyTransforms : false;
+            console.log('  ' + chalk.grey('Browserify entry point') + ' -- ' + chalk.green(ans.browserifySource));
+            console.log('  ' + chalk.grey('Browserify bundle path') + ' -- ' + chalk.green(ans.browserifyDist));
+            console.log('  ' + chalk.grey('Browserify transforms') + ' -- ' +
+            chalk.green(settings.browserifyTransforms.join(' ')));
+            console.log('');
+        }
 
         var saveCb = function() {
             console.log('____________________________\n');

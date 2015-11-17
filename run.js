@@ -9,6 +9,9 @@ function run(params) {
     var style = require('./tasks/style');
     var sprite = require('./tasks/sprite');
     var image = require('./tasks/image');
+    var bfy = require('./tasks/bfy');
+
+    process.chdir(config.getDirectory());
 
     var tasks = [];
 
@@ -18,6 +21,7 @@ function run(params) {
         if (project.styleProcessor) { style(project, config, params); }
         if (project.spriteSourcePath) { sprite(project, config, params); }
         if (project.imagesPath) { image(project, config, params); }
+        if (project.browserifySource) { bfy(project, config, params); }
 
         require('./tasks/watch')(project, config, project);
 

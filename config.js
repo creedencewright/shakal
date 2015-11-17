@@ -142,6 +142,31 @@ var config = {
             }
         }
 
+        if (project.browserifySource) {
+            try {
+                require.resolve('browserify');
+            } catch (err) {
+                dependencies.push('browserify');
+                dependencies.push('babelify');
+                dependencies.push('babel-preset-es2015');
+            }
+            try {
+                require.resolve('vinyl-source-stream');
+            } catch (err) {
+                dependencies.push('vinyl-source-stream');
+            }
+
+            if (project.browserifyTransforms !== false) {
+                project.browserifyTransforms.forEach(function(t) {
+                    try {
+                        require.resolve(t);
+                    } catch (err) {
+                        dependencies.push(t);
+                    }
+                });
+            }
+        }
+
         if (project.spriteSourcePath) {
             try {
                 require.resolve('gulp-imagemin');
