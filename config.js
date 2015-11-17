@@ -147,8 +147,6 @@ var config = {
                 require.resolve('browserify');
             } catch (err) {
                 dependencies.push('browserify');
-                dependencies.push('babelify');
-                dependencies.push('babel-preset-es2015');
             }
             try {
                 require.resolve('vinyl-source-stream');
@@ -158,10 +156,34 @@ var config = {
 
             if (project.browserifyTransforms !== false) {
                 project.browserifyTransforms.forEach(function(t) {
-                    try {
-                        require.resolve(t);
-                    } catch (err) {
-                        dependencies.push(t);
+                    if (t === 'babelify' || t === 'reactify') {
+                        try {
+                            require.resolve('babelify');
+                        } catch (err) {
+                            dependencies.push('babelify');
+                        }
+
+                        if (t === 'babelify') {
+                            try {
+                                require.resolve('babel-preset-es2015');
+                            } catch (err) {
+                                dependencies.push('babel-preset-es2015');
+                            }
+                        }
+
+                        if (t === 'reactify') {
+                            try {
+                                require.resolve('babel-preset-react');
+                            } catch (err) {
+                                dependencies.push('babel-preset-react');
+                            }
+                        }
+                    } else {
+                        try {
+                            require.resolve(t);
+                        } catch (err) {
+                            dependencies.push(t);
+                        }
                     }
                 });
             }

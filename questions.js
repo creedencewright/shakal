@@ -224,7 +224,7 @@ function setQuestions(projectName, folderName, config, isConfig) {
         name: 'browserifyTransforms',
         message: 'What transforms you would like to be applied?',
         type: 'checkbox',
-        choices: ['reactify', 'uglifyify']
+        choices: ['babelify', 'reactify', 'uglifyify']
     };
 
     var browfyDistQ = {

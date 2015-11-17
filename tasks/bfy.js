@@ -21,11 +21,18 @@ module.exports = function(project, config, params) {
         console.log('[' + chalk.grey(getTime()) + '] ' + 'Starting \'' + chalk.cyan(project.name + "_browserify") +
         '\'...');
 
-        var b = browserify(sourceFile).transform(babelify, {presets: ['es2015']});
+        var b = browserify(sourceFile);
 
         if (project.browserifyTransforms !== undefined && project.browserifyTransforms !== false) {
             project.browserifyTransforms.forEach(function(tr) {
-                //b.transform(tr);
+                if (tr === 'babelify') {
+                    var presets = ['es2015'];
+                    if (project.browserifyTransforms.indexOf('reactify') !== -1) { presets.push('react'); }
+
+                    b.transform(tr, {presets: presets});
+                } else if (tr !== 'reactify'){
+                    b.transform(tr, {global: true});
+                }
             });
         }
 
