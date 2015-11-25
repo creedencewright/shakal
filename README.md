@@ -3,7 +3,7 @@
 ```npm i -g shakal```
 ---
 
-`shakal` compiles styles, optimizes images and generates sprites. (`browserify` support is coming soon)
+`shakal` compiles styles, optimizes images, generates sprites and `browserify`es your javascripts.
 
 The key feature is that `shakal` lives as a global module, making it possible to work with several projects.
 
