@@ -6,7 +6,7 @@ var plumber   = require('gulp-plumber');
 var getTime   = require('../get-time')
 var chalk     = require('chalk');
 var path      = require('path');
-var notify = require('../utils/notifier');
+var notify    = require('../utils/notifier');
 
 module.exports = function(project, config, params) {
     if (project.styleAutoprefixer) {
@@ -32,18 +32,18 @@ module.exports = function(project, config, params) {
             //Error handling
             .pipe(plumber(function(error) {
                 console.log('[' + chalk.grey(getTime()) + '] ' + chalk.bgRed.white(error.message));
-                if (params.notify) notify('Damn, ' + config.getName()+'!', error.message);
+                if (params.notify) notify('Damn, ' + config.getName() + '!', error.message);
                 this.emit('end');
             }))
 
-            .pipe(less());
+            .pipe(less())
+            .pipe(minifycss());
 
         if (project.styleAutoprefixer) {
             bundle.pipe(prefix(project.styleAutoprefixer))
         }
 
         bundle
-            .pipe(minifycss())
             .pipe(gulp.dest(project.path))
             .on('end', function() {
                 var timePassed = Date.now() - startTime;
