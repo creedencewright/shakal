@@ -7,7 +7,7 @@ var chalk    = require('chalk');
 var getTime  = require('../get-time');
 var plumber  = require('gulp-plumber');
 
-module.exports = function(project) {
+module.exports = function(project, config, params) {
     var folders = [];
 
     console.log(chalk.cyan('Images'));
