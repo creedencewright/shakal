@@ -1,4 +1,9 @@
-# ![alt text](https://raw.githubusercontent.com/creedencewright/shakal/master/assets/icon.png "shakal") shakal
+
+<p align="center">
+  <img align="center" src="https://raw.githubusercontent.com/creedencewright/shakal/master/assets/icon.png" />
+</p>
+
+# shakal
 #### Friendly CLI task manager
 ```npm i -g shakal```
 ---
