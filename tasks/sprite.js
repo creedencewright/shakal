@@ -51,6 +51,11 @@ module.exports = function(project, config, params) {
             });
 
             glob.glob(srcPath + '/**/*.svg', function(err, files) {
+                if (!files.length) {
+                    resolve([]);
+                    return;
+                }
+
                 files.forEach(function(file) {
                     var filepath = path.resolve(file);
 
