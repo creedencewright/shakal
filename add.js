@@ -86,7 +86,6 @@ function setup(projectName, projectPath, isConfig) {
         if (ans.spriteConfirm) {
             settings.spriteSourcePath = ans.spriteImagesPath;
             settings.spritePath       = ans.spritePath;
-            settings.spriteRetina     = ans.spriteRetina;
             settings.spriteCssPath    = ans.spriteCssPath ? ans.spriteCssPath : false;
             console.log('  ' + chalk.grey('Sprite source path') + ' -- ' + chalk.green(ans.spriteImagesPath));
             console.log('  ' + chalk.grey('Generated sprite path') + ' -- ' + chalk.green(ans.spritePath));

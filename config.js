@@ -64,8 +64,6 @@ var config = {
             var projectToUpdate = this.getProjectByName(project.name);
             var i               = this._data.projects.indexOf(projectToUpdate);
 
-            if (dependencies.length) this.setDependencies(dependencies);
-
             this._data.projects[i] = project;
             this._write();
 
@@ -90,7 +88,9 @@ var config = {
     },
     _installDeps: function(dependencies, cb) {
         console.log(chalk.green('Go grab a cup of coffee') + ', ' + chalk.cyan(this.getName()) +
-        '! I\'m going to install ' + chalk.yellow(dependencies.join(' ')) + '\n');
+            '! I\'m going to install ' + chalk.yellow(dependencies.join(' ')) + '\n');
+
+        this.setDependencies(dependencies);
 
         var moduleDir = path.dirname(process.argv[1]);
         var exec      = require('child_process').exec;
@@ -119,6 +119,11 @@ var config = {
                 require.resolve('gulp-minify-css');
             } catch (err) {
                 dependencies.push('gulp-minify-css');
+            }
+            try {
+                require.resolve('gulp-livereload');
+            } catch (err) {
+                dependencies.push('gulp-livereload');
             }
             if (project.styleAutoprefixer) {
                 try {
