@@ -23,6 +23,8 @@ var config = {
         this._data.deps = this._data.deps.filter(function(dep, i) {
             return this._data.deps.indexOf(dep) === i
         }.bind(this));
+
+        this._write();
     },
     getDirectory: function() {
         return path.normalize(path.dirname(process.argv[1]));

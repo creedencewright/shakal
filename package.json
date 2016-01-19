@@ -1,6 +1,6 @@
 {
   "name": "shakal",
-  "version": "0.5.1",
+  "version": "0.5.3",
   "description": "client side task runner based on gulp",
   "preferGlobal": true,
   "dependencies": {
@@ -9,6 +9,7 @@
     "gaze": "0.5.1",
     "glob": "^6.0.4",
     "gulp": "^3.9.0",
+    "gulp-livereload": "^3.8.1",
     "gulp-cached": "^1.1.0",
     "gulp-plumber": "^1.0.1",
     "inquirer": "^0.11.0",

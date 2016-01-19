@@ -84,7 +84,7 @@ module.exports = function(project, config, params) {
         });
 
         var p2 = new Promise(function(resolve) {
-            var spriteData = gulp.src(srcPath + '/**/*.png')
+            var spriteData = gulp.src(path.normalize(srcPath + '/**/*.png'))
                 .pipe(spritesmith({
                     imgName: FILE_NAME + '.png',
                     cssName: 'style.css',
@@ -109,7 +109,6 @@ module.exports = function(project, config, params) {
                 }));
 
             spriteData.img
-                .pipe(pngquant({quality: '65-80', speed: 4}))
                 .pipe(gulp.dest(distSpritePath));
         });
 
