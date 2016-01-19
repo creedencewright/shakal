@@ -8,11 +8,11 @@
 ```npm i -g shakal```
 ---
 
-`shakal` compiles styles, optimizes images, generates sprites and `browserify`es your javascripts.
+`shakal` compiles styles, optimizes images, generates SVG and PNG sprites.
 
 The key feature is that `shakal` lives as a global module, making it possible to work with several projects.
 
-`shakal` also has lazy retina support. It means that when building a sprite `shakal` checks for each image if it has a @2x version (like `image-name@2x.png`). If it does -- `shakal` generates a media query inside .sprite() mixin that will switch to a @2x image on a high-dpi device.
+Using the sprite bundler you get three files: sprite.png, sprite.svg and icons.less. To set an icon use generated mixin -- `.icon(@filename)`.
 
 When you run the manager it takes **active** projects and generates gulp tasks using the parameters you've specified during the adding.
 
