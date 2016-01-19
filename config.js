@@ -149,6 +149,16 @@ var config = {
                 if (dependencies.indexOf('gulp-imagemin') === -1) dependencies.push('gulp-imagemin');
             }
             try {
+                require.resolve('handlebars');
+            } catch (err) {
+                if (dependencies.indexOf('handlebars') === -1) dependencies.push('handlebars');
+            }
+            try {
+                require.resolve('svg-sprite');
+            } catch (err) {
+                if (dependencies.indexOf('svg-sprite') === -1) dependencies.push('svg-sprite');
+            }
+            try {
                 require.resolve('gulp.spritesmith');
             } catch (err) {
                 dependencies.push('gulp.spritesmith');
