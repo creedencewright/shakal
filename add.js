@@ -1,44 +1,13 @@
+// Adding new project
+
 var inquirer = require("inquirer");
-
-var config = require('./config');
-var chalk  = require('chalk');
-var path   = require('path');
-
-//function getFiles(str) {
-//    if (str.split('/').length > 1) {
-//        var data = fs.readdirSync('./'+str);
-//    } else {
-//        var data = fs.readdirSync('./');
-//    }
-//    var files = [];
-//
-//    data.forEach(function(el) {
-//        var re = '^'+str+'.*';
-//        var regex = new RegExp(re);
-//        var found = el.match(regex);
-//
-//        if (found !== null) {
-//            files.push(el);
-//        }
-//    });
-//
-//    if (files.length === 1) {
-//        var res = files[0].replace(str, '')
-//        if (fs.lstatSync('./' + str + res).isDirectory()) {
-//            return res + '/';
-//        }
-//        return res;
-//    }
-//    return false;
-//}
+var config   = require('./config');
+var chalk    = require('chalk');
+var path     = require('path');
 
 inquirer.prompt.prompts.input.prototype.onKeypress = function(e) {
     if (e.key.name === 'tab') {
         this.rl.line = this.rl.line.trim();
-        //var file = getFiles(this.rl.line);
-        //if (file) {
-        //    this.rl.line += file;
-        //}
     }
     this.render();
 };
@@ -54,7 +23,7 @@ function setup(projectName, projectPath, isConfig) {
     if (projectName) {
         if (config.isNameOccupied(projectName) && !isConfig) {
             console.log(chalk.bgYellow.black('Oops :( \n') + 'Looks like you already have a project with a name <' +
-            chalk.bgRed.white(projectName) + '>\n');
+                chalk.bgRed.white(projectName) + '>\n');
         }
     }
 
@@ -83,8 +52,8 @@ function setup(projectName, projectPath, isConfig) {
 
         if (!isConfig && config.isNameOccupied(settings.name)) {
             console.log(chalk.bgRed.white('\n' + userName + ', you already have a project with this name - <' +
-            settings.name +
-            '>', 'white', 'bgRed'));
+                settings.name +
+                '>', 'white', 'bgRed'));
             process.exit();
         }
 
@@ -124,27 +93,13 @@ function setup(projectName, projectPath, isConfig) {
             console.log('  ' + chalk.grey('Generated sprite style path') + ' -- ' + chalk.green(ans.spriteCssPath));
             console.log('');
         }
-        if (ans.browserifyConfirm) {
-            settings.browserifySource     = ans.browserifySource;
-
-            settings.browserifyDist       =
-                ans.browserifyDist ===
-                'same folder' ? path.dirname(ans.browserifySource) :  ans.browserifyDist;
-
-            settings.browserifyTransforms = ans.browserifyTransforms ? ans.browserifyTransforms : false;
-            console.log('  ' + chalk.grey('Browserify entry point') + ' -- ' + chalk.green(ans.browserifySource));
-            console.log('  ' + chalk.grey('Browserify bundle path') + ' -- ' + chalk.green(ans.browserifyDist));
-            console.log('  ' + chalk.grey('Browserify transforms') + ' -- ' +
-            chalk.green(settings.browserifyTransforms.join(' ')));
-            console.log('');
-        }
 
         var saveCb = function() {
             console.log('____________________________\n');
             console.log('Looks like this is it, ' + chalk.cyan(userName) + '.');
             console.log('To run the bundler type ' + chalk.green('shakal run') + '.');
             console.log('If you made a mistake during the project initialization you can fix that with ' +
-            chalk.green('shakal config ' + settings.name) + '.');
+                chalk.green('shakal config ' + settings.name) + '.');
             console.log('\nMay the force be with you, ' + chalk.cyan(userName) + '.');
         }
 

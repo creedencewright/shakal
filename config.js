@@ -142,53 +142,6 @@ var config = {
             }
         }
 
-        if (project.browserifySource) {
-            try {
-                require.resolve('browserify');
-            } catch (err) {
-                dependencies.push('browserify');
-            }
-            try {
-                require.resolve('vinyl-source-stream');
-            } catch (err) {
-                dependencies.push('vinyl-source-stream');
-            }
-
-            if (project.browserifyTransforms !== false) {
-                project.browserifyTransforms.forEach(function(t) {
-                    if (t === 'babelify' || t === 'reactify') {
-                        try {
-                            require.resolve('babelify');
-                        } catch (err) {
-                            dependencies.push('babelify');
-                        }
-
-                        if (t === 'babelify') {
-                            try {
-                                require.resolve('babel-preset-es2015');
-                            } catch (err) {
-                                dependencies.push('babel-preset-es2015');
-                            }
-                        }
-
-                        if (t === 'reactify') {
-                            try {
-                                require.resolve('babel-preset-react');
-                            } catch (err) {
-                                dependencies.push('babel-preset-react');
-                            }
-                        }
-                    } else {
-                        try {
-                            require.resolve(t);
-                        } catch (err) {
-                            dependencies.push(t);
-                        }
-                    }
-                });
-            }
-        }
-
         if (project.spriteSourcePath) {
             try {
                 require.resolve('gulp-imagemin');

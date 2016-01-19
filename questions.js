@@ -193,50 +193,6 @@ function setQuestions(projectName, folderName, config, isConfig) {
         }
     };
 
-    var browfyQ = {
-        when: function(ans) {
-            return ans.projectNameConfirm || projectName;
-        },
-        name: 'browserifyConfirm',
-        message: function(ans) {
-            var name = config.getName() ? config.getName() : ans.userName;
-            return chalk.cyan(name) + ', do you want to use ' + chalk.green('Browserify') + '?'
-        },
-        type: 'confirm',
-        default: false
-    };
-
-    var browfySourceQ = {
-        when: function(ans) {
-            return ans.browserifyConfirm;
-        },
-        name: 'browserifySource',
-        message: chalk.green('Great') + '! I\'m going to need a ' + chalk.magenta('RELATIVE') +
-        ' path to the entry file then. Like ' +
-        chalk.green('path/to/some/file.js') + '\n  ' +
-        chalk.grey(path.normalize(projectPath + '/')) + '>'
-    };
-
-    var browfyTransformsQ = {
-        when: function(ans) {
-            return ans.browserifyConfirm;
-        },
-        name: 'browserifyTransforms',
-        message: 'What transforms you would like to be applied?',
-        type: 'checkbox',
-        choices: ['babelify', 'reactify', 'uglifyify']
-    };
-
-    var browfyDistQ = {
-        when: function(ans) {
-            return ans.browserifyConfirm;
-        },
-        default: 'same folder',
-        name: 'browserifyDist',
-        message: 'Where do you want me to put a bundle.js?\n' +
-        chalk.grey(path.normalize(projectPath + '/')) + '>'
-    };
-
     if (isConfig) {
         if (project.imagesPath) {
             imagesPathQ.default = project.imagesPath.join(';');
@@ -256,19 +212,12 @@ function setQuestions(projectName, folderName, config, isConfig) {
         if (project.spriteCssPath) {
             spriteCssQ.default = project.spriteCssPath;
         }
-        if (project.browserifySource) {
-            browfySourceQ.default = project.browserifySource;
-        }
-        if (project.browserifyDist) {
-            browfyDistQ.default = project.browserifyDist;
-        }
 
         styleCssPathQ.default = project.styleCssPath ? project.styleCssPath : 'same folder';
-        browfyDistQ.default   = project.browserifyDist ? project.browserifyDist : 'same folder';
         prefParamQ.default    = project.styleAutoprefixer ? project.styleAutoprefixer : 'last 3 versions';
     }
 
-    questions.push(userQ, projectNameQ, imagesConfirmQ, imagesPathQ, styleProcessorQ, stylePathQ, styleCssPathQ, prefQ, prefParamQ, spriteConfirmQ, spriteImagesQ, spritePathQ, spriteRetinaQ, spriteCssQ, browfyQ, browfySourceQ, browfyTransformsQ, browfyDistQ);
+    questions.push(userQ, projectNameQ, imagesConfirmQ, imagesPathQ, styleProcessorQ, stylePathQ, styleCssPathQ, prefQ, prefParamQ, spriteConfirmQ, spriteImagesQ, spritePathQ, spriteRetinaQ, spriteCssQ);
 
     return questions;
 }

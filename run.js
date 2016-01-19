@@ -16,7 +16,6 @@ function run(params) {
         if (project.styleProcessor) { require('./tasks/style')(project, config, params); }
         if (project.spriteSourcePath) { require('./tasks/sprite')(project, config, params); }
         if (project.imagesPath) { require('./tasks/image')(project, config, params); }
-        if (project.browserifySource) { require('./tasks/bfy')(project, config, params); }
 
         require('./tasks/watch')(project, config, project);
 
