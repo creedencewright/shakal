@@ -1,12 +1,12 @@
-var gulp      = require('gulp');
-var reload    = require('gulp-livereload');
-var less      = require('gulp-less');
-var minifycss = require('gulp-minify-css');
-var plumber   = require('gulp-plumber');
-var getTime   = require('../get-time')
-var chalk     = require('chalk');
-var path      = require('path');
-var notify    = require('../utils/notifier');
+var gulp    = require('gulp');
+var reload  = require('gulp-livereload');
+var less    = require('gulp-less');
+var plumber = require('gulp-plumber');
+var getTime = require('../get-time')
+var chalk   = require('chalk');
+var path    = require('path');
+var notify  = require('../utils/notifier');
+var csso    = require('gulp-csso');
 
 module.exports = function(project, config, params) {
     if (project.styleAutoprefixer) {
@@ -37,7 +37,7 @@ module.exports = function(project, config, params) {
             }))
 
             .pipe(less())
-            .pipe(minifycss());
+            .pipe(csso());
 
         if (project.styleAutoprefixer) {
             bundle.pipe(prefix(project.styleAutoprefixer))

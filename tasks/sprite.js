@@ -4,6 +4,7 @@ var path        = require('path');
 var spritesmith = require('gulp.spritesmith');
 var mkdirp      = require('mkdirp');
 var url2        = require('url2');
+var buffer      = require('vinyl-buffer');
 var chalk       = require('chalk');
 var fs          = require('fs');
 var File        = require('vinyl');
@@ -107,26 +108,45 @@ module.exports = function(project, config, params) {
                             };
                         };
 
-                        resolve(data.sprites.map(setImageData));
+                        resolve({
+                            pngs: data.sprites.map(setImageData),
+                            sprite: {
+                                width: data.spritesheet.width,
+                                height: data.spritesheet.height,
+                                halfWidth: data.spritesheet.width / 2,
+                                halfHeight: data.spritesheet.height / 2,
+                            }
+                        });
 
                         return ''; // prevents css file rendering
                     }
                 }));
 
             spriteData.img
-                .pipe(gulp.dest(distSpritePath));
+                .pipe(buffer()) // spritesmith 6.0 returns Stream instead of Buffer
+                .pipe(pngquant({quality: '70-90', speed: 4})())
+                .pipe(gulp.dest(distSpritePath))
         });
 
         var compile = function(values) {
+            handlebars.registerHelper('retinize', function(data, name) {
+                return data.pngs.filter(function(s) {return s.name === name + '-2x';}).length !== 0;
+            });
+
             var template = handlebars.compile(templateSource);
 
-            var templateData = {
+            var cssStr = template({
                 svgs: values[0],
-                pngs: values[1],
-                mixinName: mixinName
-            };
+                pngSprite: values[1].sprite,
+                pngs: values[1].pngs.map(function(png) {
+                    if (png.name.indexOf('@2x') === -1) return png;
 
-            var cssStr = template(templateData);
+                    png.name = png.name.replace('@2x', '-2x');
+
+                    return png;
+                }),
+                mixinName: mixinName
+            });
 
             mkdirp.sync(distCssPath);
             fs.writeFileSync(distCssPath + styleFilename + '.less', cssStr);

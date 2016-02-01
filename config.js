@@ -118,9 +118,9 @@ var config = {
                 dependencies.push('gulp-less');
             }
             try {
-                require.resolve('gulp-minify-css');
+                require.resolve('gulp-csso');
             } catch (err) {
-                dependencies.push('gulp-minify-css');
+                dependencies.push('gulp-csso');
             }
             try {
                 require.resolve('gulp-livereload');
